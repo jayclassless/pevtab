@@ -1,11 +1,11 @@
 <script setup lang="ts">
 defineProps<{
   open: boolean
-}>();
+}>()
 
 defineEmits<{
   toggle: []
-}>();
+}>()
 </script>
 
 <template>

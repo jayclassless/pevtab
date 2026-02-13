@@ -1,28 +1,28 @@
 <script setup lang="ts">
-import type { SavedPlan } from '~/utils/types';
+import type { SavedPlan } from '~/utils/types'
 
 defineProps<{
   plans: SavedPlan[]
   activePlanId: string | null
-}>();
+}>()
 
 const emit = defineEmits<{
   select: [plan: SavedPlan]
   delete: [id: string]
-}>();
+}>()
 
-const confirmingId = ref<string | null>(null);
+const confirmingId = ref<string | null>(null)
 
 function formatDate(ts: number): string {
-  return new Date(ts).toLocaleString();
+  return new Date(ts).toLocaleString()
 }
 
 function handleDelete(id: string) {
   if (confirmingId.value === id) {
-    confirmingId.value = null;
-    emit('delete', id);
+    confirmingId.value = null
+    emit('delete', id)
   } else {
-    confirmingId.value = id;
+    confirmingId.value = id
   }
 }
 </script>
@@ -42,7 +42,9 @@ function handleDelete(id: string) {
     >
       <div class="text-truncate me-2">
         <div class="fw-bold text-truncate">{{ plan.name }}</div>
-        <small :class="plan.id === activePlanId ? 'text-white-50' : 'text-secondary'">{{ formatDate(plan.savedAt) }}</small>
+        <small :class="plan.id === activePlanId ? 'text-white-50' : 'text-secondary'">{{
+          formatDate(plan.savedAt)
+        }}</small>
       </div>
       <button
         v-if="confirmingId !== plan.id"
@@ -52,18 +54,10 @@ function handleDelete(id: string) {
         @click.stop="handleDelete(plan.id)"
       />
       <div v-else class="btn-group btn-group-sm flex-shrink-0">
-        <button
-          type="button"
-          class="btn btn-danger"
-          @click.stop="handleDelete(plan.id)"
-        >
+        <button type="button" class="btn btn-danger" @click.stop="handleDelete(plan.id)">
           Delete
         </button>
-        <button
-          type="button"
-          class="btn btn-outline-secondary"
-          @click.stop="confirmingId = null"
-        >
+        <button type="button" class="btn btn-outline-secondary" @click.stop="confirmingId = null">
           Cancel
         </button>
       </div>

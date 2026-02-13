@@ -1,70 +1,67 @@
 <script setup lang="ts">
-import { v4 as uuidv4 } from 'uuid';
-import { Plan } from 'pev2';
-import SidePanel from '~/components/SidePanel.vue';
-import PlanForm from '~/components/PlanForm.vue';
-import PlanHistory from '~/components/PlanHistory.vue';
-import IconSun from '~/components/IconSun.vue';
-import IconMoon from '~/components/IconMoon.vue';
-import IconCircleHalf from '~/components/IconCircleHalf.vue';
-import IconSortAlpha from '~/components/IconSortAlpha.vue';
-import IconSortDate from '~/components/IconSortDate.vue';
-import IconSortAsc from '~/components/IconSortAsc.vue';
-import IconSortDesc from '~/components/IconSortDesc.vue';
-import { getPlans, savePlan, removePlan } from '~/utils/planStorage';
-import type { SavedPlan } from '~/utils/types';
+import { v4 as uuidv4 } from 'uuid'
+import { Plan } from 'pev2'
+import SidePanel from '~/components/SidePanel.vue'
+import PlanForm from '~/components/PlanForm.vue'
+import PlanHistory from '~/components/PlanHistory.vue'
+import IconSun from '~/components/IconSun.vue'
+import IconMoon from '~/components/IconMoon.vue'
+import IconCircleHalf from '~/components/IconCircleHalf.vue'
+import IconSortAlpha from '~/components/IconSortAlpha.vue'
+import IconSortDate from '~/components/IconSortDate.vue'
+import IconSortAsc from '~/components/IconSortAsc.vue'
+import IconSortDesc from '~/components/IconSortDesc.vue'
+import { getPlans, savePlan, removePlan } from '~/utils/planStorage'
+import type { SavedPlan } from '~/utils/types'
 
-type ThemeMode = 'auto' | 'light' | 'dark';
-type SortField = 'name' | 'date';
-type SortDir = 'asc' | 'desc';
+type ThemeMode = 'auto' | 'light' | 'dark'
+type SortField = 'name' | 'date'
+type SortDir = 'asc' | 'desc'
 
-const panelOpen = ref(true);
-const planSource = ref('');
-const planQuery = ref('');
-const activePlanId = ref<string | null>(null);
-const history = ref<SavedPlan[]>([]);
-const themeMode = ref<ThemeMode>('auto');
-const sortField = ref<SortField>('date');
-const sortDir = ref<SortDir>('desc');
+const panelOpen = ref(true)
+const planSource = ref('')
+const planQuery = ref('')
+const activePlanId = ref<string | null>(null)
+const history = ref<SavedPlan[]>([])
+const themeMode = ref<ThemeMode>('auto')
+const sortField = ref<SortField>('date')
+const sortDir = ref<SortDir>('desc')
 
 const sortedHistory = computed(() => {
-  const list = [...history.value];
+  const list = [...history.value]
   list.sort((a, b) => {
-    const cmp = sortField.value === 'name'
-      ? a.name.localeCompare(b.name)
-      : a.savedAt - b.savedAt;
-    return sortDir.value === 'asc' ? cmp : -cmp;
-  });
-  return list;
-});
+    const cmp = sortField.value === 'name' ? a.name.localeCompare(b.name) : a.savedAt - b.savedAt
+    return sortDir.value === 'asc' ? cmp : -cmp
+  })
+  return list
+})
 
-const systemDark = window.matchMedia('(prefers-color-scheme: dark)');
+const systemDark = window.matchMedia('(prefers-color-scheme: dark)')
 
 function applyTheme() {
-  const resolved = themeMode.value === 'auto'
-    ? (systemDark.matches ? 'dark' : 'light')
-    : themeMode.value;
-  document.documentElement.setAttribute('data-bs-theme', resolved);
+  const resolved =
+    themeMode.value === 'auto' ? (systemDark.matches ? 'dark' : 'light') : themeMode.value
+  document.documentElement.setAttribute('data-bs-theme', resolved)
 }
 
 watch(themeMode, (mode) => {
-  storage.setItem('local:themeMode', mode);
-  applyTheme();
-});
+  storage.setItem('local:themeMode', mode)
+  applyTheme()
+})
 
-systemDark.addEventListener('change', applyTheme);
+systemDark.addEventListener('change', applyTheme)
 
 async function loadHistory() {
-  history.value = await getPlans();
+  history.value = await getPlans()
   if (history.value.length > 0) {
-    selectPlan(history.value[0]);
+    selectPlan(history.value[0])
   }
 }
 
 function selectPlan(plan: SavedPlan) {
-  planSource.value = plan.planSource;
-  planQuery.value = plan.planQuery;
-  activePlanId.value = plan.id;
+  planSource.value = plan.planSource
+  planQuery.value = plan.planQuery
+  activePlanId.value = plan.id
 }
 
 async function handleSubmit(payload: { planSource: string; planQuery: string; planName: string }) {
@@ -74,31 +71,31 @@ async function handleSubmit(payload: { planSource: string; planQuery: string; pl
     planSource: payload.planSource,
     planQuery: payload.planQuery,
     savedAt: Date.now(),
-  };
-  history.value = await savePlan(plan);
-  selectPlan(plan);
-  panelOpen.value = false;
+  }
+  history.value = await savePlan(plan)
+  selectPlan(plan)
+  panelOpen.value = false
 }
 
 async function deletePlan(id: string) {
-  history.value = await removePlan(id);
+  history.value = await removePlan(id)
   if (activePlanId.value === id) {
     if (history.value.length > 0) {
-      selectPlan(history.value[0]);
+      selectPlan(history.value[0])
     } else {
-      planSource.value = '';
-      planQuery.value = '';
-      activePlanId.value = null;
+      planSource.value = ''
+      planQuery.value = ''
+      activePlanId.value = null
     }
   }
 }
 
 onMounted(async () => {
-  const saved = await storage.getItem<ThemeMode>('local:themeMode');
-  if (saved) themeMode.value = saved;
-  applyTheme();
-  await loadHistory();
-});
+  const saved = await storage.getItem<ThemeMode>('local:themeMode')
+  if (saved) themeMode.value = saved
+  applyTheme()
+  await loadHistory()
+})
 </script>
 
 <template>

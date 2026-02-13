@@ -1,21 +1,21 @@
 <script setup lang="ts">
 const emit = defineEmits<{
   submit: [payload: { planSource: string; planQuery: string; planName: string }]
-}>();
+}>()
 
-const planSource = ref('');
-const planQuery = ref('');
-const planName = ref('');
+const planSource = ref('')
+const planQuery = ref('')
+const planName = ref('')
 
 function onSubmit() {
   emit('submit', {
     planSource: planSource.value,
     planQuery: planQuery.value,
     planName: planName.value,
-  });
-  planSource.value = '';
-  planQuery.value = '';
-  planName.value = '';
+  })
+  planSource.value = ''
+  planQuery.value = ''
+  planName.value = ''
 }
 </script>
 
