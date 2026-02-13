@@ -1,0 +1,2 @@
+patchedDependencies:
+  pev2@1.20.1: patches/pev2@1.20.1.patch

@@ -1,0 +1,46 @@
+diff --git a/dist/pev2.es.js b/dist/pev2.es.js
+index e8362b451378f78d6d39b88c1df3b67f188b0f0b..f1aa3d95df3ff250c50c166f611f87789b0d0077 100644
+--- a/dist/pev2.es.js
++++ b/dist/pev2.es.js
+@@ -285,7 +285,7 @@ function zO() {
+         "\r": "r",
+         "\u2028": "u2028",
+         "\u2029": "u2029"
+-      }, iT = parseFloat, sT = parseInt, Ep = typeof ml == "object" && ml && ml.Object === Object && ml, oT = typeof self == "object" && self && self.Object === Object && self, dn = Ep || oT || Function("return this")(), Bu = e && !e.nodeType && e, zi = Bu && !0 && t && !t.nodeType && t, mp = zi && zi.exports === Bu, Vu = mp && Ep.process, er = function() {
++      }, iT = parseFloat, sT = parseInt, Ep = typeof ml == "object" && ml && ml.Object === Object && ml, oT = typeof self == "object" && self && self.Object === Object && self, dn = Ep || oT || globalThis, Bu = e && !e.nodeType && e, zi = Bu && !0 && t && !t.nodeType && t, mp = zi && zi.exports === Bu, Vu = mp && Ep.process, er = function() {
+         try {
+           var X = zi && zi.require && zi.require("util").types;
+           return X || Vu && Vu.binding && Vu.binding("util");
+@@ -13155,7 +13155,7 @@ function KN(t) {
+ }
+ function kd(t) {
+   const e = parseFloat(t.toPrecision(2)).toLocaleString();
+-  return H.template("${f}&nbsp;&times;")({ f: e });
++  return e + "&nbsp;&times;";
+ }
+ function ni(t) {
+   return t instanceof Array || (t = [t]), t = H.map(t, (e) => H.escape(e.replace(/(^\(|\)$)/g, ""))), t.join(", ");
+@@ -13173,10 +13173,10 @@ function YN(t) {
+   return Bd(t);
+ }
+ function Bd(t, e = 2) {
+-  const i = e < 0 ? 0 : e, s = ["Bytes", "kB", "MB", "GB", "TB", "PB", "EB", "ZB", "YB"], a = Math.floor(Math.log(t) / Math.log(1024)), l = H.template("${value} ${unit}"), c = parseFloat(
++  const i = e < 0 ? 0 : e, s = ["Bytes", "kB", "MB", "GB", "TB", "PB", "EB", "ZB", "YB"], a = Math.floor(Math.log(t) / Math.log(1024)), c = parseFloat(
+     (t / Math.pow(1024, a)).toPrecision(i)
+   ).toLocaleString();
+-  return l({ value: c, unit: s[a] });
++  return c + " " + s[a];
+ }
+ function kn(t) {
+   return t ? Bd(t * 8 * 1024) : "";
+@@ -13191,9 +13191,7 @@ function Om(t) {
+   return isNaN(t) ? "-" : H.round(t * 100) + "%";
+ }
+ function jN(t) {
+-  return typeof t == "string" && (t = t.split(/\s*,\s*/)), '<ul class="list-unstyled mb-0">' + H.template(
+-    "<% _.forEach(lines, function(line) { %><li><%= line %></li><% }); %>"
+-  )({ lines: t }) + "</ul>";
++  return typeof t == "string" && (t = t.split(/\s*,\s*/)), '<ul class="list-unstyled mb-0">' + t.map(function(line) { return "<li>" + line + "</li>"; }).join("") + "</ul>";
+ }
+ function qN(t) {
+   return Gl(BN, { sortGroup: t }).mount(
