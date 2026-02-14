@@ -294,6 +294,21 @@ describe('App', () => {
     })
   })
 
+  it('removes matchMedia listener on unmount', async () => {
+    const removeEventListener = vi.fn()
+    vi.stubGlobal(
+      'matchMedia',
+      vi.fn(() => ({
+        matches: false,
+        addEventListener: vi.fn(),
+        removeEventListener,
+      }))
+    )
+    const wrapper = await mountApp()
+    wrapper.unmount()
+    expect(removeEventListener).toHaveBeenCalledWith('change', expect.any(Function))
+  })
+
   it('panel toggle works', async () => {
     const wrapper = await mountApp()
     const panel = wrapper.findComponent(SidePanel)

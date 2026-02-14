@@ -50,8 +50,6 @@ watch(themeMode, (mode) => {
   applyTheme()
 })
 
-systemDark.addEventListener('change', applyTheme)
-
 async function loadHistory() {
   try {
     history.value = await getPlans()
@@ -107,10 +105,15 @@ async function deletePlan(id: string) {
 }
 
 onMounted(async () => {
+  systemDark.addEventListener('change', applyTheme)
   const saved = await storage.getItem<ThemeMode>('local:themeMode')
   if (saved) themeMode.value = saved
   applyTheme()
   await loadHistory()
+})
+
+onUnmounted(() => {
+  systemDark.removeEventListener('change', applyTheme)
 })
 </script>
 
