@@ -10,6 +10,12 @@ export default defineConfig({
       provider: 'v8',
       include: ['components/**/*.vue', 'entrypoints/**/*.{ts,vue}', 'utils/**/*.ts'],
       exclude: ['**/__tests__/**', '**/main.ts'],
+      thresholds: {
+        lines: 95,
+        functions: 95,
+        branches: 95,
+        statements: 95,
+      },
     },
   },
 })
