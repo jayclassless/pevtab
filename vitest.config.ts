@@ -1,10 +1,11 @@
 import vue from '@vitejs/plugin-vue'
-import { defineConfig } from 'vitest/config'
+import { configDefaults, defineConfig } from 'vitest/config'
 import { WxtVitest } from 'wxt/testing/vitest-plugin'
 
 export default defineConfig({
   plugins: [WxtVitest(), vue()],
   test: {
+    exclude: [...configDefaults.exclude, 'e2e/**'],
     environment: 'happy-dom',
     coverage: {
       provider: 'v8',
