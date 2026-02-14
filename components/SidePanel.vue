@@ -11,7 +11,7 @@ defineEmits<{
 <template>
   <div
     class="d-flex flex-shrink-0 border-end bg-body-tertiary overflow-hidden"
-    :style="{ width: open ? '400px' : undefined }"
+    :style="{ width: open ? '400px' : '36px' }"
   >
     <div v-show="open" class="flex-grow-1 panel-content" style="min-width: 0">
       <div class="flex-shrink-0 p-3 pb-0">

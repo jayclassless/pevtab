@@ -42,9 +42,7 @@ function handleDelete(id: string) {
     >
       <div class="text-truncate me-2">
         <div class="fw-bold text-truncate">{{ plan.name }}</div>
-        <small :class="plan.id === activePlanId ? 'text-white-50' : 'text-secondary'">{{
-          formatDate(plan.savedAt)
-        }}</small>
+        <small class="text-body-secondary">{{ formatDate(plan.savedAt) }}</small>
       </div>
       <button
         v-if="confirmingId !== plan.id"
@@ -64,3 +62,9 @@ function handleDelete(id: string) {
     </li>
   </ul>
 </template>
+
+<style scoped>
+.list-group-item.active .text-body-secondary {
+  color: rgba(255, 255, 255, 0.75) !important;
+}
+</style>

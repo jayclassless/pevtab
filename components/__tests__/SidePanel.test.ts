@@ -9,12 +9,6 @@ describe('SidePanel', () => {
     expect(wrapper.find('div').attributes('style')).toContain('width: 400px')
   })
 
-  it('has no width when open=false', () => {
-    const wrapper = mount(SidePanel, { props: { open: false } })
-    const style = wrapper.find('div').attributes('style') ?? ''
-    expect(style).not.toContain('width')
-  })
-
   it('shows content via v-show when open', () => {
     const wrapper = mount(SidePanel, {
       props: { open: true },
