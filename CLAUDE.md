@@ -29,6 +29,7 @@ Run a single test file: `npx vitest run components/__tests__/PlanForm.test.ts`
 The extension opens a `/visualizer.html` tab when the extension button is clicked.
 
 **Layers:**
+
 - **Background script** (`entrypoints/background.ts`) — Listens for extension button click, opens the visualizer tab
 - **Storage layer** (`utils/planStorage.ts`) — CRUD operations for saved plans using WXT's `storage` API (browser local storage). Key: `'local:plans'`
 - **UI** (`entrypoints/visualizer/App.vue`) — Split layout: collapsible side panel (plan history + form) on the left, pev2 `<Plan>` visualization on the right
