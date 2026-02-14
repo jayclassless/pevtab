@@ -6,6 +6,7 @@ import type { SavedPlan } from '~/utils/types'
 
 import PlanHistory from '~/components/PlanHistory.vue'
 import SidePanel from '~/components/SidePanel.vue'
+import * as planStorage from '~/utils/planStorage'
 
 vi.mock('uuid', () => ({
   v4: vi.fn(() => 'test-uuid'),
@@ -304,5 +305,61 @@ describe('App', () => {
     expect(panel.props('open')).toBe(false)
     await findToggle().trigger('click')
     expect(panel.props('open')).toBe(true)
+  })
+
+  describe('error handling', () => {
+    it('shows error when loading plans fails', async () => {
+      vi.spyOn(planStorage, 'getPlans').mockRejectedValueOnce(new Error('storage error'))
+      const { default: App } = await import('../App.vue')
+      const wrapper = mount(App)
+      await flushPromises()
+
+      expect(wrapper.find('.alert-danger').text()).toContain('Failed to load saved plans.')
+      vi.restoreAllMocks()
+    })
+
+    it('shows error when saving plan fails', async () => {
+      const wrapper = await mountApp()
+      vi.spyOn(planStorage, 'savePlan').mockRejectedValueOnce(new Error('storage error'))
+
+      const vm = wrapper.vm as Record<string, any>
+      await vm.handleSubmit({
+        planSource: 'source',
+        planQuery: 'SELECT 1',
+        planName: 'Test',
+      })
+      await flushPromises()
+
+      expect(wrapper.find('.alert-danger').text()).toContain('Failed to save plan.')
+      expect(vm.activePlanId).toBeNull()
+      expect(vm.panelOpen).toBe(true)
+      vi.restoreAllMocks()
+    })
+
+    it('shows error when deleting plan fails', async () => {
+      const plans = [makePlan({ id: '1' })]
+      const wrapper = await mountApp(plans)
+      vi.spyOn(planStorage, 'removePlan').mockRejectedValueOnce(new Error('storage error'))
+
+      const vm = wrapper.vm as Record<string, any>
+      await vm.deletePlan('1')
+      await flushPromises()
+
+      expect(wrapper.find('.alert-danger').text()).toContain('Failed to delete plan.')
+      expect(vm.history).toHaveLength(1)
+      vi.restoreAllMocks()
+    })
+
+    it('dismisses error when close button is clicked', async () => {
+      vi.spyOn(planStorage, 'getPlans').mockRejectedValueOnce(new Error('storage error'))
+      const { default: App } = await import('../App.vue')
+      const wrapper = mount(App)
+      await flushPromises()
+
+      expect(wrapper.find('.alert-danger').exists()).toBe(true)
+      await wrapper.find('.alert-danger .btn-close').trigger('click')
+      expect(wrapper.find('.alert-danger').exists()).toBe(false)
+      vi.restoreAllMocks()
+    })
   })
 })

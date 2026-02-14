@@ -26,6 +26,7 @@ const history = ref<SavedPlan[]>([])
 const themeMode = ref<ThemeMode>('auto')
 const sortField = ref<SortField>('date')
 const sortDir = ref<SortDir>('desc')
+const errorMessage = ref<string | null>(null)
 
 const sortedHistory = computed(() => {
   const list = [...history.value]
@@ -52,7 +53,12 @@ watch(themeMode, (mode) => {
 systemDark.addEventListener('change', applyTheme)
 
 async function loadHistory() {
-  history.value = await getPlans()
+  try {
+    history.value = await getPlans()
+  } catch {
+    errorMessage.value = 'Failed to load saved plans.'
+    return
+  }
   if (sortedHistory.value.length > 0) {
     selectPlan(sortedHistory.value[0])
   }
@@ -72,13 +78,23 @@ async function handleSubmit(payload: { planSource: string; planQuery: string; pl
     planQuery: payload.planQuery,
     savedAt: Date.now(),
   }
-  history.value = await savePlan(plan)
+  try {
+    history.value = await savePlan(plan)
+  } catch {
+    errorMessage.value = 'Failed to save plan.'
+    return
+  }
   selectPlan(plan)
   panelOpen.value = false
 }
 
 async function deletePlan(id: string) {
-  history.value = await removePlan(id)
+  try {
+    history.value = await removePlan(id)
+  } catch {
+    errorMessage.value = 'Failed to delete plan.'
+    return
+  }
   if (activePlanId.value === id) {
     if (sortedHistory.value.length > 0) {
       selectPlan(sortedHistory.value[0])
@@ -99,97 +115,107 @@ onMounted(async () => {
 </script>
 
 <template>
-  <div class="d-flex flex-row h-100">
-    <SidePanel :open="panelOpen" @toggle="panelOpen = !panelOpen">
-      <template #header>
-        <PlanForm @submit="handleSubmit" />
-        <hr />
-      </template>
-      <PlanHistory
-        :plans="sortedHistory"
-        :active-plan-id="activePlanId"
-        @select="selectPlan"
-        @delete="deletePlan"
-      />
-      <template #footer>
-        <div class="border-top pt-2 mt-2 d-flex justify-content-center gap-3">
-          <div class="btn-group btn-group-sm" role="group" aria-label="Sort by">
-            <button
-              type="button"
-              class="btn"
-              :class="sortField === 'date' ? 'btn-primary' : 'btn-outline-secondary'"
-              title="Sort by date"
-              @click="sortField = 'date'"
-            >
-              <IconSortDate />
-            </button>
-            <button
-              type="button"
-              class="btn"
-              :class="sortField === 'name' ? 'btn-primary' : 'btn-outline-secondary'"
-              title="Sort by name"
-              @click="sortField = 'name'"
-            >
-              <IconSortAlpha />
-            </button>
+  <div class="d-flex flex-column h-100">
+    <div
+      v-if="errorMessage"
+      class="alert alert-danger alert-dismissible mb-0 rounded-0 flex-shrink-0"
+      role="alert"
+    >
+      {{ errorMessage }}
+      <button type="button" class="btn-close" aria-label="Close" @click="errorMessage = null" />
+    </div>
+    <div class="d-flex flex-row flex-grow-1 overflow-hidden">
+      <SidePanel :open="panelOpen" @toggle="panelOpen = !panelOpen">
+        <template #header>
+          <PlanForm @submit="handleSubmit" />
+          <hr />
+        </template>
+        <PlanHistory
+          :plans="sortedHistory"
+          :active-plan-id="activePlanId"
+          @select="selectPlan"
+          @delete="deletePlan"
+        />
+        <template #footer>
+          <div class="border-top pt-2 mt-2 d-flex justify-content-center gap-3">
+            <div class="btn-group btn-group-sm" role="group" aria-label="Sort by">
+              <button
+                type="button"
+                class="btn"
+                :class="sortField === 'date' ? 'btn-primary' : 'btn-outline-secondary'"
+                title="Sort by date"
+                @click="sortField = 'date'"
+              >
+                <IconSortDate />
+              </button>
+              <button
+                type="button"
+                class="btn"
+                :class="sortField === 'name' ? 'btn-primary' : 'btn-outline-secondary'"
+                title="Sort by name"
+                @click="sortField = 'name'"
+              >
+                <IconSortAlpha />
+              </button>
+            </div>
+            <div class="btn-group btn-group-sm" role="group" aria-label="Sort direction">
+              <button
+                type="button"
+                class="btn"
+                :class="sortDir === 'desc' ? 'btn-primary' : 'btn-outline-secondary'"
+                title="Sort descending"
+                @click="sortDir = 'desc'"
+              >
+                <IconSortDesc />
+              </button>
+              <button
+                type="button"
+                class="btn"
+                :class="sortDir === 'asc' ? 'btn-primary' : 'btn-outline-secondary'"
+                title="Sort ascending"
+                @click="sortDir = 'asc'"
+              >
+                <IconSortAsc />
+              </button>
+            </div>
+            <div class="vr"></div>
+            <div class="btn-group btn-group-sm" role="group" aria-label="Theme">
+              <button
+                type="button"
+                class="btn"
+                :class="themeMode === 'light' ? 'btn-primary' : 'btn-outline-secondary'"
+                title="Light"
+                @click="themeMode = 'light'"
+              >
+                <IconSun />
+              </button>
+              <button
+                type="button"
+                class="btn"
+                :class="themeMode === 'auto' ? 'btn-primary' : 'btn-outline-secondary'"
+                title="System"
+                @click="themeMode = 'auto'"
+              >
+                <IconCircleHalf />
+              </button>
+              <button
+                type="button"
+                class="btn"
+                :class="themeMode === 'dark' ? 'btn-primary' : 'btn-outline-secondary'"
+                title="Dark"
+                @click="themeMode = 'dark'"
+              >
+                <IconMoon />
+              </button>
+            </div>
           </div>
-          <div class="btn-group btn-group-sm" role="group" aria-label="Sort direction">
-            <button
-              type="button"
-              class="btn"
-              :class="sortDir === 'desc' ? 'btn-primary' : 'btn-outline-secondary'"
-              title="Sort descending"
-              @click="sortDir = 'desc'"
-            >
-              <IconSortDesc />
-            </button>
-            <button
-              type="button"
-              class="btn"
-              :class="sortDir === 'asc' ? 'btn-primary' : 'btn-outline-secondary'"
-              title="Sort ascending"
-              @click="sortDir = 'asc'"
-            >
-              <IconSortAsc />
-            </button>
-          </div>
-          <div class="vr"></div>
-          <div class="btn-group btn-group-sm" role="group" aria-label="Theme">
-            <button
-              type="button"
-              class="btn"
-              :class="themeMode === 'light' ? 'btn-primary' : 'btn-outline-secondary'"
-              title="Light"
-              @click="themeMode = 'light'"
-            >
-              <IconSun />
-            </button>
-            <button
-              type="button"
-              class="btn"
-              :class="themeMode === 'auto' ? 'btn-primary' : 'btn-outline-secondary'"
-              title="System"
-              @click="themeMode = 'auto'"
-            >
-              <IconCircleHalf />
-            </button>
-            <button
-              type="button"
-              class="btn"
-              :class="themeMode === 'dark' ? 'btn-primary' : 'btn-outline-secondary'"
-              title="Dark"
-              @click="themeMode = 'dark'"
-            >
-              <IconMoon />
-            </button>
-          </div>
+        </template>
+      </SidePanel>
+      <div class="flex-grow-1 overflow-hidden d-flex flex-column">
+        <Plan v-if="planSource" :plan-source="planSource" :plan-query="planQuery" />
+        <div v-else class="d-flex align-items-center justify-content-center h-100 text-secondary">
+          Paste an EXPLAIN plan to visualize it.
         </div>
-      </template>
-    </SidePanel>
-    <div class="flex-grow-1 overflow-hidden d-flex flex-column">
-      <Plan v-if="planSource" :plan-source="planSource" :plan-query="planQuery" />
-      <div v-else class="d-flex align-items-center justify-content-center h-100 text-secondary">
-        Paste an EXPLAIN plan to visualize it.
       </div>
     </div>
   </div>
