@@ -53,8 +53,8 @@ systemDark.addEventListener('change', applyTheme)
 
 async function loadHistory() {
   history.value = await getPlans()
-  if (history.value.length > 0) {
-    selectPlan(history.value[0])
+  if (sortedHistory.value.length > 0) {
+    selectPlan(sortedHistory.value[0])
   }
 }
 
@@ -80,8 +80,8 @@ async function handleSubmit(payload: { planSource: string; planQuery: string; pl
 async function deletePlan(id: string) {
   history.value = await removePlan(id)
   if (activePlanId.value === id) {
-    if (history.value.length > 0) {
-      selectPlan(history.value[0])
+    if (sortedHistory.value.length > 0) {
+      selectPlan(sortedHistory.value[0])
     } else {
       planSource.value = ''
       planQuery.value = ''

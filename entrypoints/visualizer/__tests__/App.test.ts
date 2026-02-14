@@ -60,6 +60,19 @@ describe('App', () => {
     expect(history.props('activePlanId')).toBe('1')
   })
 
+  it('selects first plan in sorted order on mount', async () => {
+    // Storage order: Old first, Newer second
+    // But default sort is date desc, so Newer should be selected
+    const plans = [
+      makePlan({ id: '1', name: 'Old', savedAt: 1000 }),
+      makePlan({ id: '2', name: 'Newer', savedAt: 2000 }),
+    ]
+    const wrapper = await mountApp(plans)
+
+    const history = wrapper.findComponent(PlanHistory)
+    expect(history.props('activePlanId')).toBe('2')
+  })
+
   it('shows placeholder when no plans exist', async () => {
     const wrapper = await mountApp([])
     expect(wrapper.text()).toContain('Paste an EXPLAIN plan to visualize it.')
@@ -168,7 +181,10 @@ describe('App', () => {
       // Click delete on first plan, then confirm
       const items = wrapper.findComponent(PlanHistory).findAll('[role="button"]')
       await items[0].find('button[aria-label="Delete"]').trigger('click')
-      await items[0].findAll('button').find((b) => b.text() === 'Delete')!.trigger('click')
+      await items[0]
+        .findAll('button')
+        .find((b) => b.text() === 'Delete')!
+        .trigger('click')
       await flushPromises()
 
       const updatedHistory = wrapper.findComponent(PlanHistory)
@@ -176,12 +192,43 @@ describe('App', () => {
       expect(updatedHistory.props('activePlanId')).toBe('2')
     })
 
+    it('selects the first plan in sorted order after deletion', async () => {
+      const plans = [
+        makePlan({ id: '1', name: 'Active', savedAt: 3000 }),
+        makePlan({ id: '2', name: 'Old', savedAt: 1000 }),
+        makePlan({ id: '3', name: 'Recent', savedAt: 2000 }),
+      ]
+      const wrapper = await mountApp(plans)
+
+      // Default sort is date desc, so order is: Active(3000), Recent(2000), Old(1000)
+      // Select the active plan (first in sorted order)
+      const history = wrapper.findComponent(PlanHistory)
+      expect(history.props('activePlanId')).toBe('1')
+
+      // Delete active plan (id '1')
+      const items = history.findAll('[role="button"]')
+      await items[0].find('button[aria-label="Delete"]').trigger('click')
+      await items[0]
+        .findAll('button')
+        .find((b) => b.text() === 'Delete')!
+        .trigger('click')
+      await flushPromises()
+
+      // Should select 'Recent' (id '3', savedAt 2000) — the new first in date desc order
+      // NOT 'Old' (id '2') which would be first in raw storage order
+      const updatedHistory = wrapper.findComponent(PlanHistory)
+      expect(updatedHistory.props('activePlanId')).toBe('3')
+    })
+
     it('clears display when last plan deleted', async () => {
       const wrapper = await mountApp([makePlan({ id: '1' })])
 
       const item = wrapper.findComponent(PlanHistory).find('[role="button"]')
       await item.find('button[aria-label="Delete"]').trigger('click')
-      await item.findAll('button').find((b) => b.text() === 'Delete')!.trigger('click')
+      await item
+        .findAll('button')
+        .find((b) => b.text() === 'Delete')!
+        .trigger('click')
       await flushPromises()
 
       expect(wrapper.text()).toContain('Paste an EXPLAIN plan to visualize it.')
