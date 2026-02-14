@@ -3,10 +3,11 @@ import { defineConfig } from '@playwright/test'
 export default defineConfig({
   testDir: 'e2e',
   workers: 1,
-  retries: process.env.CI ? 2 : 0,
-  reporter: 'html',
+  retries: 2,
+  reporter: 'list',
   use: {
     trace: 'on-first-retry',
+    screenshot: 'only-on-failure',
   },
   projects: [
     {
