@@ -5,8 +5,8 @@ export default defineConfig({
   modules: ['@wxt-dev/module-vue'],
   manifest: {
     name: 'PostgresExplainerTab',
+    homepage_url: 'https://github.com/jayclassless/pevtab',
     permissions: ['storage'],
-    action: {},
   },
   vite: () => ({
     resolve: {

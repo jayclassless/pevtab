@@ -3,6 +3,8 @@
   "version": "0.1.0",
   "private": true,
   "description": "PostgreSQL Explain Visualizer in a Tab",
+  "license": "MIT",
+  "author": "Jason Simeone",
   "type": "module",
   "scripts": {
     "dev": "wxt",
