@@ -294,6 +294,49 @@ describe('App', () => {
     })
   })
 
+  describe('cross-tab sync', () => {
+    it('updates history when storage changes externally', async () => {
+      const wrapper = await mountApp([makePlan({ id: '1', name: 'Original' })])
+      const history = wrapper.findComponent(PlanHistory)
+      expect(history.props('plans')).toHaveLength(1)
+
+      const newPlans = [
+        makePlan({ id: '1', name: 'Original', savedAt: 1000 }),
+        makePlan({ id: '2', name: 'From Other Tab', savedAt: 2000 }),
+      ]
+      await storage.setItem('local:plans', newPlans)
+      await flushPromises()
+
+      expect(wrapper.findComponent(PlanHistory).props('plans')).toHaveLength(2)
+    })
+
+    it('falls back to first plan when active plan is removed externally', async () => {
+      const plans = [
+        makePlan({ id: '1', name: 'Active', savedAt: 2000 }),
+        makePlan({ id: '2', name: 'Other', savedAt: 1000 }),
+      ]
+      const wrapper = await mountApp(plans)
+
+      // Active plan should be id '1' (date desc, savedAt 2000 is first)
+      expect(wrapper.findComponent(PlanHistory).props('activePlanId')).toBe('1')
+
+      // Externally remove the active plan
+      await storage.setItem('local:plans', [makePlan({ id: '2', name: 'Other', savedAt: 1000 })])
+      await flushPromises()
+
+      expect(wrapper.findComponent(PlanHistory).props('activePlanId')).toBe('2')
+    })
+
+    it('clears view when all plans are removed externally', async () => {
+      const wrapper = await mountApp([makePlan({ id: '1' })])
+
+      await storage.setItem('local:plans', [])
+      await flushPromises()
+
+      expect(wrapper.text()).toContain('Paste an EXPLAIN plan to visualize it.')
+    })
+  })
+
   it('removes matchMedia listener on unmount', async () => {
     const removeEventListener = vi.fn()
     vi.stubGlobal(

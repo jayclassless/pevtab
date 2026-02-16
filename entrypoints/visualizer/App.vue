@@ -11,7 +11,7 @@ import IconSortAlpha from '~/components/IconSortAlpha.vue'
 import IconSortDate from '~/components/IconSortDate.vue'
 import IconSortAsc from '~/components/IconSortAsc.vue'
 import IconSortDesc from '~/components/IconSortDesc.vue'
-import { getPlans, savePlan, removePlan } from '~/utils/planStorage'
+import { getPlans, savePlan, removePlan, watchPlans } from '~/utils/planStorage'
 import type { SavedPlan } from '~/utils/types'
 
 type ThemeMode = 'auto' | 'light' | 'dark'
@@ -104,16 +104,31 @@ async function deletePlan(id: string) {
   }
 }
 
+let unwatchPlans: (() => void) | undefined
+
 onMounted(async () => {
   systemDark.addEventListener('change', applyTheme)
   const saved = await storage.getItem<ThemeMode>('local:themeMode')
   if (saved) themeMode.value = saved
   applyTheme()
   await loadHistory()
+  unwatchPlans = watchPlans((plans) => {
+    history.value = plans
+    if (activePlanId.value && !plans.some((p) => p.id === activePlanId.value)) {
+      if (sortedHistory.value.length > 0) {
+        selectPlan(sortedHistory.value[0])
+      } else {
+        planSource.value = ''
+        planQuery.value = ''
+        activePlanId.value = null
+      }
+    }
+  })
 })
 
 onUnmounted(() => {
   systemDark.removeEventListener('change', applyTheme)
+  unwatchPlans?.()
 })
 </script>
 

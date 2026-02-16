@@ -1,9 +1,9 @@
-import { describe, it, expect, beforeEach } from 'vitest'
+import { describe, it, expect, beforeEach, vi } from 'vitest'
 import { fakeBrowser } from 'wxt/testing'
 
 import type { SavedPlan } from '../types'
 
-import { getPlans, savePlan, removePlan } from '../planStorage'
+import { getPlans, savePlan, removePlan, watchPlans } from '../planStorage'
 
 function makePlan(overrides: Partial<SavedPlan> = {}): SavedPlan {
   return {
@@ -76,6 +76,42 @@ describe('planStorage', () => {
 
       const result = await removePlan('id-1')
       expect(result).toEqual([])
+    })
+  })
+
+  describe('watchPlans', () => {
+    it('fires callback with updated plans when storage changes', async () => {
+      const cb = vi.fn()
+      const unwatch = watchPlans(cb)
+
+      const plans = [makePlan()]
+      await storage.setItem('local:plans', plans)
+
+      expect(cb).toHaveBeenCalledWith(plans)
+      unwatch()
+    })
+
+    it('normalizes null to empty array', async () => {
+      const cb = vi.fn()
+      // Seed storage so the subsequent setItem triggers a change
+      await storage.setItem('local:plans', [makePlan()])
+      const unwatch = watchPlans(cb)
+      cb.mockClear()
+
+      await storage.setItem('local:plans', null as any)
+
+      expect(cb).toHaveBeenCalledWith([])
+      unwatch()
+    })
+
+    it('stops firing after unwatch is called', async () => {
+      const cb = vi.fn()
+      const unwatch = watchPlans(cb)
+
+      unwatch()
+      await storage.setItem('local:plans', [makePlan()])
+
+      expect(cb).not.toHaveBeenCalled()
     })
   })
 })

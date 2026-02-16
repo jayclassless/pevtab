@@ -22,3 +22,9 @@ export async function removePlan(id: string): Promise<SavedPlan[]> {
   await storage.setItem(STORAGE_KEY, plans)
   return plans
 }
+
+export function watchPlans(cb: (plans: SavedPlan[]) => void): () => void {
+  return storage.watch<SavedPlan[] | null>(STORAGE_KEY, (newValue) => {
+    cb(newValue ?? [])
+  })
+}
