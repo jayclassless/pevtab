@@ -10,7 +10,7 @@ export default defineConfig({
     coverage: {
       provider: 'v8',
       include: ['components/**/*.vue', 'entrypoints/**/*.{ts,vue}', 'utils/**/*.ts'],
-      exclude: ['**/__tests__/**', '**/main.ts'],
+      exclude: ['**/__tests__/**', '**/main.ts', '**/devSeedPlans.ts'],
       thresholds: {
         lines: 95,
         functions: 95,
