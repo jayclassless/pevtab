@@ -61,7 +61,7 @@ The extension opens a `/visualizer.html` tab when the extension button is clicke
 - **UI** (`entrypoints/visualizer/App.vue`) — Split layout: collapsible side panel (plan history + form) on the left, pev2 `<Plan>` visualization on the right
 - **Components** (`components/`) — `PlanForm`, `PlanHistory`, `SidePanel`, and SVG icon components
 
-**Data model** (`utils/types.ts`): `SavedPlan` has `id` (UUID via `uuid` package), `name`, `planSource` (EXPLAIN JSON), `planQuery` (SQL), `savedAt` (ISO timestamp string).
+**Data model** (`utils/types.ts`): `SavedPlan` has `id` (UUID via `uuid` package), `name`, `planSource` (EXPLAIN JSON), `planQuery` (SQL), `savedAt` (Unix timestamp in milliseconds via `Date.now()`).
 
 **Theme system:** Three modes (light/dark/auto) persisted to `'local:themeMode'`, applied via Bootstrap's `data-bs-theme` attribute.
 
