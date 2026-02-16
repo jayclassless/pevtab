@@ -2,7 +2,7 @@ import { defineConfig } from 'wxt'
 
 // See https://wxt.dev/api/config.html
 export default defineConfig({
-  modules: ['@wxt-dev/module-vue'],
+  modules: ['@wxt-dev/module-vue', '@wxt-dev/auto-icons'],
   manifestVersion: 3,
   manifest: {
     name: 'PostgresExplainerTab',
@@ -15,6 +15,9 @@ export default defineConfig({
         id: '@pevtab.classless.net',
       },
     },
+  },
+  autoIcons: {
+    developmentIndicator: 'overlay',
   },
   vite: () => ({
     resolve: {
