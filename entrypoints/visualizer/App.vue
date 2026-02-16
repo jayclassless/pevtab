@@ -91,16 +91,6 @@ async function deletePlan(id: string) {
     history.value = await removePlan(id)
   } catch {
     errorMessage.value = 'Failed to delete plan.'
-    return
-  }
-  if (activePlanId.value === id) {
-    if (sortedHistory.value.length > 0) {
-      selectPlan(sortedHistory.value[0])
-    } else {
-      planSource.value = ''
-      planQuery.value = ''
-      activePlanId.value = null
-    }
   }
 }
 

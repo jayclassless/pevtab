@@ -3,7 +3,7 @@ import { fakeBrowser } from 'wxt/testing'
 
 import type { SavedPlan } from '../types'
 
-import { getPlans, savePlan, removePlan, watchPlans } from '../planStorage'
+import { getPlans, setPlans, savePlan, removePlan, watchPlans } from '../planStorage'
 
 function makePlan(overrides: Partial<SavedPlan> = {}): SavedPlan {
   return {
@@ -30,6 +30,23 @@ describe('planStorage', () => {
       const plans = [makePlan(), makePlan({ id: 'id-2', name: 'Plan B' })]
       await storage.setItem('local:plans', plans)
       expect(await getPlans()).toEqual(plans)
+    })
+  })
+
+  describe('setPlans', () => {
+    it('sets plans in storage', async () => {
+      const plan = makePlan()
+      await setPlans([plan])
+      expect(await getPlans()).toEqual([plan])
+    })
+
+    it('overwrites existing plans', async () => {
+      await storage.setItem('local:plans', [makePlan({ id: 'id-1' })])
+
+      const newPlan = makePlan({ id: 'id-2', name: 'Plan B' })
+      await setPlans([newPlan])
+
+      expect(await getPlans()).toEqual([newPlan])
     })
   })
 
