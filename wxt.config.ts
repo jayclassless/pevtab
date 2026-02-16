@@ -7,6 +7,8 @@ export default defineConfig({
     name: 'PostgresExplainerTab',
     homepage_url: 'https://github.com/jayclassless/pevtab',
     permissions: ['storage'],
+    action: {},
+    incognito: 'split',
   },
   vite: () => ({
     resolve: {
