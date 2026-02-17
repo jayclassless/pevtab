@@ -13,11 +13,18 @@ export default defineConfig({
     browser_specific_settings: {
       gecko: {
         id: '@pevtab.classless.net',
+        // @ts-expect-error WXT types don't include this valid Firefox manifest key
+        data_collection_permissions: {
+          required: ['none'],
+        },
       },
     },
   },
   autoIcons: {
     developmentIndicator: 'overlay',
+  },
+  zip: {
+    excludeSources: ['coverage/**', 'test-results/**', 'playwright-report/**', 'plans/**'],
   },
   vite: () => ({
     resolve: {
