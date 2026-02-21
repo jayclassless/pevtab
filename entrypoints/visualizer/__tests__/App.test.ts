@@ -30,6 +30,12 @@ let matchMediaDark = false
 
 beforeEach(() => {
   fakeBrowser.reset()
+  vi.spyOn(browser.runtime, 'getManifest').mockReturnValue({
+    manifest_version: 3,
+    name: 'Test',
+    version: '0.0.0',
+    homepage_url: 'https://example.com',
+  })
   matchMediaDark = false
 
   vi.stubGlobal(

@@ -10,6 +10,7 @@ import IconCircleHalf from '~/components/IconCircleHalf.vue'
 import IconSortAlpha from '~/components/IconSortAlpha.vue'
 import IconSortDate from '~/components/IconSortDate.vue'
 import IconSortAsc from '~/components/IconSortAsc.vue'
+import IconGithub from '~/components/IconGithub.vue'
 import IconSortDesc from '~/components/IconSortDesc.vue'
 import { getPlans, savePlan, removePlan, watchPlans } from '~/utils/planStorage'
 import type { SavedPlan } from '~/utils/types'
@@ -145,76 +146,86 @@ onUnmounted(() => {
           @delete="deletePlan"
         />
         <template #footer>
-          <div class="border-top pt-2 mt-2 d-flex justify-content-center gap-3">
-            <div class="btn-group btn-group-sm" role="group" aria-label="Sort by">
-              <button
-                type="button"
-                class="btn"
-                :class="sortField === 'date' ? 'btn-primary' : 'btn-outline-secondary'"
-                title="Sort by date"
-                @click="sortField = 'date'"
+          <div class="border-top pt-2 mt-2 d-flex align-items-center">
+            <div class="flex-grow-1 d-flex justify-content-center align-items-center gap-3">
+              <div class="btn-group btn-group-sm" role="group" aria-label="Sort by">
+                <button
+                  type="button"
+                  class="btn"
+                  :class="sortField === 'date' ? 'btn-primary' : 'btn-outline-secondary'"
+                  title="Sort by date"
+                  @click="sortField = 'date'"
+                >
+                  <IconSortDate />
+                </button>
+                <button
+                  type="button"
+                  class="btn"
+                  :class="sortField === 'name' ? 'btn-primary' : 'btn-outline-secondary'"
+                  title="Sort by name"
+                  @click="sortField = 'name'"
+                >
+                  <IconSortAlpha />
+                </button>
+              </div>
+              <div class="btn-group btn-group-sm" role="group" aria-label="Sort direction">
+                <button
+                  type="button"
+                  class="btn"
+                  :class="sortDir === 'desc' ? 'btn-primary' : 'btn-outline-secondary'"
+                  title="Sort descending"
+                  @click="sortDir = 'desc'"
+                >
+                  <IconSortDesc />
+                </button>
+                <button
+                  type="button"
+                  class="btn"
+                  :class="sortDir === 'asc' ? 'btn-primary' : 'btn-outline-secondary'"
+                  title="Sort ascending"
+                  @click="sortDir = 'asc'"
+                >
+                  <IconSortAsc />
+                </button>
+              </div>
+              <div class="btn-group btn-group-sm" role="group" aria-label="Theme">
+                <button
+                  type="button"
+                  class="btn"
+                  :class="themeMode === 'light' ? 'btn-primary' : 'btn-outline-secondary'"
+                  title="Light"
+                  @click="themeMode = 'light'"
+                >
+                  <IconSun />
+                </button>
+                <button
+                  type="button"
+                  class="btn"
+                  :class="themeMode === 'auto' ? 'btn-primary' : 'btn-outline-secondary'"
+                  title="System"
+                  @click="themeMode = 'auto'"
+                >
+                  <IconCircleHalf />
+                </button>
+                <button
+                  type="button"
+                  class="btn"
+                  :class="themeMode === 'dark' ? 'btn-primary' : 'btn-outline-secondary'"
+                  title="Dark"
+                  @click="themeMode = 'dark'"
+                >
+                  <IconMoon />
+                </button>
+              </div>
+              <a
+                :href="browser.runtime.getManifest().homepage_url"
+                target="_blank"
+                rel="noopener noreferrer"
+                class="btn btn-sm btn-outline-secondary flex-shrink-0"
+                title="Homepage"
               >
-                <IconSortDate />
-              </button>
-              <button
-                type="button"
-                class="btn"
-                :class="sortField === 'name' ? 'btn-primary' : 'btn-outline-secondary'"
-                title="Sort by name"
-                @click="sortField = 'name'"
-              >
-                <IconSortAlpha />
-              </button>
-            </div>
-            <div class="btn-group btn-group-sm" role="group" aria-label="Sort direction">
-              <button
-                type="button"
-                class="btn"
-                :class="sortDir === 'desc' ? 'btn-primary' : 'btn-outline-secondary'"
-                title="Sort descending"
-                @click="sortDir = 'desc'"
-              >
-                <IconSortDesc />
-              </button>
-              <button
-                type="button"
-                class="btn"
-                :class="sortDir === 'asc' ? 'btn-primary' : 'btn-outline-secondary'"
-                title="Sort ascending"
-                @click="sortDir = 'asc'"
-              >
-                <IconSortAsc />
-              </button>
-            </div>
-            <div class="vr"></div>
-            <div class="btn-group btn-group-sm" role="group" aria-label="Theme">
-              <button
-                type="button"
-                class="btn"
-                :class="themeMode === 'light' ? 'btn-primary' : 'btn-outline-secondary'"
-                title="Light"
-                @click="themeMode = 'light'"
-              >
-                <IconSun />
-              </button>
-              <button
-                type="button"
-                class="btn"
-                :class="themeMode === 'auto' ? 'btn-primary' : 'btn-outline-secondary'"
-                title="System"
-                @click="themeMode = 'auto'"
-              >
-                <IconCircleHalf />
-              </button>
-              <button
-                type="button"
-                class="btn"
-                :class="themeMode === 'dark' ? 'btn-primary' : 'btn-outline-secondary'"
-                title="Dark"
-                @click="themeMode = 'dark'"
-              >
-                <IconMoon />
-              </button>
+                <IconGithub />
+              </a>
             </div>
           </div>
         </template>
