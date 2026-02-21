@@ -1,6 +1,6 @@
 {
   "name": "pevtab",
-  "version": "0.1.0",
+  "version": "0.2.0",
   "private": true,
   "description": "PostgreSQL Explain Visualizer in a Tab",
   "license": "MIT",
@@ -28,7 +28,7 @@
     "bootstrap": "^5.3.8",
     "pev2": "^1.20.1",
     "uuid": "^13.0.0",
-    "vue": "^3.5.27"
+    "vue": "^3.5.28"
   },
   "devDependencies": {
     "@playwright/test": "^1.58.2",
@@ -37,13 +37,13 @@
     "@vue/test-utils": "^2.4.6",
     "@wxt-dev/auto-icons": "^1.1.0",
     "@wxt-dev/module-vue": "^1.0.3",
-    "happy-dom": "^20.6.1",
-    "oxfmt": "^0.32.0",
-    "oxlint": "^1.47.0",
+    "happy-dom": "^20.7.0",
+    "oxfmt": "^0.34.0",
+    "oxlint": "^1.49.0",
     "typescript": "^5.9.3",
     "vitest": "^4.0.18",
-    "vue-tsc": "^3.2.4",
-    "wxt": "^0.20.15"
+    "vue-tsc": "^3.2.5",
+    "wxt": "^0.20.17"
   },
   "packageManager": "pnpm@10.28.2"
 }
