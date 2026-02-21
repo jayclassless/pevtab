@@ -20,7 +20,7 @@ pnpm lint             # Lint with oxlint
 pnpm format           # Format with oxfmt
 pnpm format:check     # Check formatting
 pnpm compile          # Type-check with vue-tsc
-pnpm test:e2e         # Run Playwright e2e tests (requires build first)
+pnpm test:e2e         # Build extension then run Playwright e2e tests
 ```
 
 Run a single test file: `npx vitest run components/__tests__/PlanForm.test.ts`
