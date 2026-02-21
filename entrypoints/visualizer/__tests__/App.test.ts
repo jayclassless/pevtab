@@ -15,6 +15,10 @@ vi.mock('pev2', () => ({
   Plan: { name: 'Plan', template: '<div class="pev2-stub" />' },
 }))
 
+vi.mock('sql-formatter', () => ({
+  format: vi.fn((sql: string) => `formatted:${sql}`),
+}))
+
 function makePlan(overrides: Partial<SavedPlan> = {}): SavedPlan {
   return {
     id: 'id-1',
@@ -152,6 +156,7 @@ describe('App', () => {
       expect(vm.history).toHaveLength(1)
       expect(vm.history[0].id).toBe('test-uuid')
       expect(vm.history[0].name).toBe('My Plan')
+      expect(vm.history[0].planQuery).toBe('formatted:SELECT 2')
       expect(vm.activePlanId).toBe('test-uuid')
       expect(vm.panelOpen).toBe(false)
 
@@ -159,6 +164,39 @@ describe('App', () => {
       const stored = await storage.getItem<SavedPlan[]>('local:plans')
       expect(stored).toHaveLength(1)
       expect(stored![0].id).toBe('test-uuid')
+    })
+
+    it('does not format query when planQuery is empty', async () => {
+      const wrapper = await mountApp()
+      const vm = wrapper.vm as Record<string, any>
+
+      await vm.handleSubmit({
+        planSource: 'source',
+        planQuery: '',
+        planName: 'No Query Plan',
+      })
+      await flushPromises()
+
+      expect(vm.history[0].planQuery).toBe('')
+    })
+
+    it('falls back to original query when formatter throws', async () => {
+      const { format } = await import('sql-formatter')
+      vi.mocked(format).mockImplementationOnce(() => {
+        throw new Error('parse error')
+      })
+
+      const wrapper = await mountApp()
+      const vm = wrapper.vm as Record<string, any>
+
+      await vm.handleSubmit({
+        planSource: 'source',
+        planQuery: 'SELECT ??? garbage',
+        planName: 'Bad SQL',
+      })
+      await flushPromises()
+
+      expect(vm.history[0].planQuery).toBe('SELECT ??? garbage')
     })
 
     it('auto-generates name when planName is empty', async () => {

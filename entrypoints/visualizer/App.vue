@@ -1,6 +1,7 @@
 <script setup lang="ts">
 import { v4 as uuidv4 } from 'uuid'
 import { Plan } from 'pev2'
+import { format as formatSql } from 'sql-formatter'
 import SidePanel from '~/components/SidePanel.vue'
 import PlanForm from '~/components/PlanForm.vue'
 import PlanHistory from '~/components/PlanHistory.vue'
@@ -70,11 +71,25 @@ function selectPlan(plan: SavedPlan) {
 }
 
 async function handleSubmit(payload: { planSource: string; planQuery: string; planName: string }) {
+  let formattedQuery = payload.planQuery
+  if (payload.planQuery) {
+    try {
+      formattedQuery = formatSql(payload.planQuery, {
+        language: 'postgresql',
+        keywordCase: 'upper',
+        dataTypeCase: 'upper',
+        functionCase: 'upper',
+        identifierCase: 'lower',
+      })
+    } catch {
+      formattedQuery = payload.planQuery
+    }
+  }
   const plan: SavedPlan = {
     id: uuidv4(),
     name: payload.planName || `Plan ${new Date().toLocaleString()}`,
     planSource: payload.planSource,
-    planQuery: payload.planQuery,
+    planQuery: formattedQuery,
     savedAt: Date.now(),
   }
   try {
