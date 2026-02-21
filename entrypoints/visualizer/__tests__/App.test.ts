@@ -2,11 +2,10 @@ import { mount, flushPromises } from '@vue/test-utils'
 import { describe, it, expect, vi, beforeEach } from 'vitest'
 import { fakeBrowser } from 'wxt/testing'
 
-import type { SavedPlan } from '~/utils/types'
-
 import PlanHistory from '~/components/PlanHistory.vue'
 import SidePanel from '~/components/SidePanel.vue'
 import * as planStorage from '~/utils/planStorage'
+import type { SavedPlan } from '~/utils/types'
 
 vi.mock('uuid', () => ({
   v4: vi.fn(() => 'test-uuid'),

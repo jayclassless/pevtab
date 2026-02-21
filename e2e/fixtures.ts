@@ -1,5 +1,6 @@
-import { chromium, test as base, type BrowserContext } from '@playwright/test'
 import path from 'node:path'
+
+import { chromium, test as base, type BrowserContext } from '@playwright/test'
 
 const extensionPath = path.resolve('.output/chrome-mv3')
 

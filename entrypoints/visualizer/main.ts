@@ -1,4 +1,5 @@
 import { createApp } from 'vue'
+
 import 'bootstrap/dist/css/bootstrap.min.css'
 import 'pev2/dist/pev2.css'
 import { devSeedPlans } from '~/utils/devSeedPlans'

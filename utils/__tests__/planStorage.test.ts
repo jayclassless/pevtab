@@ -1,9 +1,8 @@
 import { describe, it, expect, beforeEach, vi } from 'vitest'
 import { fakeBrowser } from 'wxt/testing'
 
-import type { SavedPlan } from '../types'
-
 import { getPlans, setPlans, savePlan, removePlan, watchPlans } from '../planStorage'
+import type { SavedPlan } from '../types'
 
 function makePlan(overrides: Partial<SavedPlan> = {}): SavedPlan {
   return {
