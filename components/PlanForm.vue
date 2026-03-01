@@ -27,6 +27,7 @@ function onSubmit() {
         id="plan-source"
         v-model="planSource"
         class="form-control font-monospace"
+        style="font-size: 0.75rem"
         rows="5"
         placeholder="EXPLAIN output"
         required
@@ -46,7 +47,8 @@ function onSubmit() {
         id="plan-query"
         v-model="planQuery"
         class="form-control font-monospace"
-        rows="3"
+        style="font-size: 0.75rem"
+        rows="5"
         placeholder="SQL query (optional)"
       />
     </div>
