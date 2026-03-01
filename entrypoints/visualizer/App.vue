@@ -11,7 +11,6 @@ import IconCircleHalf from '~/components/IconCircleHalf.vue'
 import IconSortAlpha from '~/components/IconSortAlpha.vue'
 import IconSortDate from '~/components/IconSortDate.vue'
 import IconSortAsc from '~/components/IconSortAsc.vue'
-import IconGithub from '~/components/IconGithub.vue'
 import IconSortDesc from '~/components/IconSortDesc.vue'
 import { getPlans, savePlan, removePlan, watchPlans } from '~/utils/planStorage'
 import type { SavedPlan } from '~/utils/types'
@@ -161,8 +160,8 @@ onUnmounted(() => {
           @delete="deletePlan"
         />
         <template #footer>
-          <div class="border-top pt-2 mt-2 d-flex align-items-center">
-            <div class="flex-grow-1 d-flex justify-content-center align-items-center gap-3">
+          <div class="border-top pt-2 mt-2 d-flex flex-column align-items-center gap-2">
+            <div class="d-flex justify-content-center align-items-center gap-3">
               <div class="btn-group btn-group-sm" role="group" aria-label="Sort by">
                 <button
                   type="button"
@@ -232,15 +231,22 @@ onUnmounted(() => {
                   <IconMoon />
                 </button>
               </div>
+            </div>
+            <div class="text-center small text-secondary d-flex justify-content-center gap-1">
               <a
                 :href="browser.runtime.getManifest().homepage_url"
                 target="_blank"
                 rel="noopener noreferrer"
-                class="btn btn-sm btn-outline-secondary flex-shrink-0"
-                title="Homepage"
+                class="text-secondary"
+                >{{ browser.runtime.getManifest().name }}</a
               >
-                <IconGithub />
-              </a>
+              <a
+                :href="`${browser.runtime.getManifest().homepage_url}/blob/main/CHANGELOG.md`"
+                target="_blank"
+                rel="noopener noreferrer"
+                class="text-secondary"
+                >v{{ browser.runtime.getManifest().version }}</a
+              >
             </div>
           </div>
         </template>

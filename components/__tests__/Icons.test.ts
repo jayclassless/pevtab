@@ -2,7 +2,6 @@ import { mount } from '@vue/test-utils'
 import { describe, it, expect } from 'vitest'
 
 import IconCircleHalf from '../IconCircleHalf.vue'
-import IconGithub from '../IconGithub.vue'
 import IconMoon from '../IconMoon.vue'
 import IconSortAlpha from '../IconSortAlpha.vue'
 import IconSortAsc from '../IconSortAsc.vue'
@@ -14,7 +13,6 @@ const icons = [
   ['IconSun', IconSun],
   ['IconMoon', IconMoon],
   ['IconCircleHalf', IconCircleHalf],
-  ['IconGithub', IconGithub],
   ['IconSortAlpha', IconSortAlpha],
   ['IconSortDate', IconSortDate],
   ['IconSortAsc', IconSortAsc],
