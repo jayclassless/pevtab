@@ -25,25 +25,25 @@
   },
   "dependencies": {
     "bootstrap": "^5.3.8",
-    "pev2": "^1.20.1",
+    "pev2": "^1.21.0",
     "sql-formatter": "^15.7.2",
     "uuid": "^13.0.0",
-    "vue": "^3.5.29"
+    "vue": "^3.5.30"
   },
   "devDependencies": {
     "@playwright/test": "^1.58.2",
-    "@vitejs/plugin-vue": "^6.0.4",
-    "@vitest/coverage-v8": "^4.0.18",
+    "@vitejs/plugin-vue": "^6.0.5",
+    "@vitest/coverage-v8": "^4.1.0",
     "@vue/test-utils": "^2.4.6",
     "@wxt-dev/auto-icons": "^1.1.1",
     "@wxt-dev/module-vue": "^1.0.3",
-    "happy-dom": "^20.7.0",
-    "oxfmt": "^0.35.0",
-    "oxlint": "^1.50.0",
+    "happy-dom": "^20.8.4",
+    "oxfmt": "^0.40.0",
+    "oxlint": "^1.55.0",
     "typescript": "^5.9.3",
-    "vitest": "^4.0.18",
+    "vitest": "^4.1.0",
     "vue-tsc": "^3.2.5",
-    "wxt": "^0.20.18"
+    "wxt": "^0.20.19"
   },
   "packageManager": "pnpm@10.28.2"
 }

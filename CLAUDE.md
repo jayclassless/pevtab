@@ -47,7 +47,6 @@ utils/
   planStorage.ts        # CRUD for plans via WXT storage API (key: 'local:plans')
   __tests__/            # Storage utility tests
 e2e/                    # Playwright e2e tests (excluded from vitest)
-patches/                # pnpm patches (pev2 CSP fix)
 ```
 
 ## Architecture
@@ -78,7 +77,6 @@ The extension opens a `/visualizer.html` tab when the extension button is clicke
 
 ## Notable Details
 
-- pev2 library has a custom patch (`patches/pev2@1.20.1.patch`) to fix CSP compatibility issues in Manifest V3 (removes `Function("return this")()` and lodash templates)
 - The WXT config aliases `vue` to the runtime-only build (`vue/dist/vue.runtime.esm-bundler.js`) for MV3 CSP compliance — do not use Vue template compilation at runtime
 - Coverage thresholds are 95% for lines, functions, branches, and statements
 - E2E tests use a custom Playwright fixture that loads the built extension into a persistent Chromium context
