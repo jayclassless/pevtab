@@ -395,6 +395,93 @@ describe('App', () => {
     expect(removeEventListener).toHaveBeenCalledWith('change', expect.any(Function))
   })
 
+  it('calls unwatchPlans on unmount', async () => {
+    const unwatch = vi.fn()
+    vi.spyOn(planStorage, 'watchPlans').mockReturnValueOnce(unwatch)
+    const wrapper = await mountApp()
+    wrapper.unmount()
+    expect(unwatch).toHaveBeenCalled()
+    vi.restoreAllMocks()
+  })
+
+  it('selects a plan when PlanHistory emits select', async () => {
+    const plans = [
+      makePlan({ id: '1', name: 'First', savedAt: 2000 }),
+      makePlan({ id: '2', name: 'Second', savedAt: 1000 }),
+    ]
+    const wrapper = await mountApp(plans)
+    const vm = wrapper.vm as Record<string, any>
+
+    // Initially id '1' is active (date desc)
+    expect(vm.activePlanId).toBe('1')
+
+    // Trigger select event for the second plan
+    wrapper.findComponent(PlanHistory).vm.$emit('select', plans[1])
+    await flushPromises()
+
+    expect(vm.activePlanId).toBe('2')
+    expect(vm.planSource).toBe(plans[1].planSource)
+    expect(vm.planQuery).toBe(plans[1].planQuery)
+  })
+
+  it('renders footer links with manifest homepage_url', async () => {
+    const wrapper = await mountApp()
+    const links = wrapper.findAll('a.text-secondary')
+    expect(links[0].text()).toBe('Test')
+    expect(links[0].attributes('href')).toBe('https://example.com')
+    expect(links[1].text()).toBe('v0.0.0')
+    expect(links[1].attributes('href')).toBe('https://example.com/blob/main/CHANGELOG.md')
+  })
+
+  it('renders footer links when homepage_url is undefined', async () => {
+    vi.spyOn(browser.runtime, 'getManifest').mockReturnValue({
+      manifest_version: 3,
+      name: 'NoBlog',
+      version: '1.0.0',
+    })
+    const wrapper = await mountApp()
+    const links = wrapper.findAll('a.text-secondary')
+    // href should be undefined/empty when homepage_url is not set
+    expect(links[0].attributes('href')).toBeFalsy()
+    expect(links[1].text()).toBe('v1.0.0')
+    vi.restoreAllMocks()
+  })
+
+  describe('button active state classes', () => {
+    it('sort buttons reflect current sort field and direction', async () => {
+      const wrapper = await mountApp()
+
+      // Default: date + desc
+      expect(wrapper.find('button[title="Sort by date"]').classes()).toContain('btn-primary')
+      expect(wrapper.find('button[title="Sort by name"]').classes()).toContain(
+        'btn-outline-secondary'
+      )
+      expect(wrapper.find('button[title="Sort descending"]').classes()).toContain('btn-primary')
+      expect(wrapper.find('button[title="Sort ascending"]').classes()).toContain(
+        'btn-outline-secondary'
+      )
+
+      await wrapper.find('button[title="Sort by name"]').trigger('click')
+      expect(wrapper.find('button[title="Sort by name"]').classes()).toContain('btn-primary')
+      expect(wrapper.find('button[title="Sort by date"]').classes()).toContain(
+        'btn-outline-secondary'
+      )
+    })
+
+    it('theme buttons reflect current theme mode', async () => {
+      const wrapper = await mountApp()
+
+      // Default: auto
+      expect(wrapper.find('button[title="System"]').classes()).toContain('btn-primary')
+      expect(wrapper.find('button[title="Light"]').classes()).toContain('btn-outline-secondary')
+      expect(wrapper.find('button[title="Dark"]').classes()).toContain('btn-outline-secondary')
+
+      await wrapper.find('button[title="Dark"]').trigger('click')
+      expect(wrapper.find('button[title="Dark"]').classes()).toContain('btn-primary')
+      expect(wrapper.find('button[title="System"]').classes()).toContain('btn-outline-secondary')
+    })
+  })
+
   it('panel toggle works', async () => {
     const wrapper = await mountApp()
     const panel = wrapper.findComponent(SidePanel)

@@ -20,6 +20,8 @@ type ThemeMode = 'auto' | 'light' | 'dark'
 type SortField = 'name' | 'date'
 type SortDir = 'asc' | 'desc'
 
+const manifest = browser.runtime.getManifest()
+
 const panelOpen = ref(true)
 const planSource = ref('')
 const planQuery = ref('')
@@ -235,18 +237,18 @@ onUnmounted(() => {
             </div>
             <div class="text-center small text-secondary d-flex justify-content-center gap-1">
               <a
-                :href="browser.runtime.getManifest().homepage_url"
+                :href="manifest.homepage_url"
                 target="_blank"
                 rel="noopener noreferrer"
                 class="text-secondary"
-                >{{ browser.runtime.getManifest().name }}</a
+                >{{ manifest.name }}</a
               >
               <a
-                :href="`${browser.runtime.getManifest().homepage_url}/blob/main/CHANGELOG.md`"
+                :href="`${manifest.homepage_url}/blob/main/CHANGELOG.md`"
                 target="_blank"
                 rel="noopener noreferrer"
                 class="text-secondary"
-                >v{{ browser.runtime.getManifest().version }}</a
+                >v{{ manifest.version }}</a
               >
             </div>
           </div>
