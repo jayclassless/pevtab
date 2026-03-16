@@ -2,6 +2,8 @@
 
 A browser extension (for both [Chrome](https://chromewebstore.google.com/detail/postgresexplainertab/jhldnmgncdpleodjciaalhnkajebojpg) & [Firefox](https://addons.mozilla.org/en-US/firefox/addon/postgresexplainertab/)) for visualizing PostgreSQL EXPLAIN plans. Click the extension icon to open a new tab where you can paste your EXPLAIN output and get an interactive visualization powered by [pev2](https://github.com/dalibo/pev2).
 
+![Screenshot](docs/pevtab_screenshot1.png)
+
 ## Prerequisites
 
 - [Node.js](https://nodejs.org/) v24.13.0
