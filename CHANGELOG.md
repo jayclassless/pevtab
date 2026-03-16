@@ -1,6 +1,6 @@
 # PostgresExplainerTab Change Log
 
-## Unreleased
+## 0.2.0 (2026-03-16)
 
 - Format SQL queries when they're submitted as part of a plan.
 - Minor styling fixes
