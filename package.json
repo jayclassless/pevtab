@@ -1,6 +1,6 @@
 {
   "name": "pevtab",
-  "version": "0.2.0",
+  "version": "0.3.0",
   "private": true,
   "description": "PostgreSQL Explain Visualizer in a Tab",
   "license": "MIT",
@@ -20,7 +20,8 @@
     "test": "vitest run",
     "test:watch": "vitest",
     "test:coverage": "vitest run --coverage",
-    "test:e2e": "wxt build && playwright test",
+    "test:e2e": "pnpm run build && playwright test",
+    "fullcheck": "pnpm run compile && pnpm run format && pnpm run lint && pnpm run test:coverage",
     "postinstall": "wxt prepare"
   },
   "dependencies": {
@@ -38,12 +39,12 @@
     "@wxt-dev/auto-icons": "^1.1.1",
     "@wxt-dev/module-vue": "^1.0.3",
     "happy-dom": "^20.8.4",
-    "oxfmt": "^0.40.0",
-    "oxlint": "^1.55.0",
+    "oxfmt": "^0.41.0",
+    "oxlint": "^1.56.0",
     "typescript": "^5.9.3",
     "vitest": "^4.1.0",
-    "vue-tsc": "^3.2.5",
-    "wxt": "^0.20.19"
+    "vue-tsc": "^3.2.6",
+    "wxt": "^0.20.20"
   },
-  "packageManager": "pnpm@10.28.2"
+  "packageManager": "pnpm@10.32.1"
 }

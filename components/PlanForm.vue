@@ -3,9 +3,11 @@ const emit = defineEmits<{
   submit: [payload: { planSource: string; planQuery: string; planName: string }]
 }>()
 
+
 const planSource = ref('')
 const planQuery = ref('')
 const planName = ref('')
+
 
 function onSubmit() {
   emit('submit', {

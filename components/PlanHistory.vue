@@ -6,16 +6,20 @@ defineProps<{
   activePlanId: string | null
 }>()
 
+
 const emit = defineEmits<{
   select: [plan: SavedPlan]
   delete: [id: string]
 }>()
 
+
 const confirmingId = ref<string | null>(null)
+
 
 function formatDate(ts: number): string {
   return new Date(ts).toLocaleString()
 }
+
 
 function handleDelete(id: string) {
   if (confirmingId.value === id) {

@@ -20,7 +20,9 @@ type ThemeMode = 'auto' | 'light' | 'dark'
 type SortField = 'name' | 'date'
 type SortDir = 'asc' | 'desc'
 
+
 const manifest = browser.runtime.getManifest()
+
 
 const panelOpen = ref(true)
 const planSource = ref('')
@@ -32,6 +34,7 @@ const sortField = ref<SortField>('date')
 const sortDir = ref<SortDir>('desc')
 const errorMessage = ref<string | null>(null)
 
+
 const sortedHistory = computed(() => {
   const list = [...history.value]
   list.sort((a, b) => {
@@ -41,7 +44,9 @@ const sortedHistory = computed(() => {
   return list
 })
 
+
 const systemDark = window.matchMedia('(prefers-color-scheme: dark)')
+
 
 function applyTheme() {
   const resolved =
@@ -49,10 +54,12 @@ function applyTheme() {
   document.documentElement.setAttribute('data-bs-theme', resolved)
 }
 
+
 watch(themeMode, (mode) => {
   storage.setItem('local:themeMode', mode)
   applyTheme()
 })
+
 
 async function loadHistory() {
   try {
@@ -66,11 +73,13 @@ async function loadHistory() {
   }
 }
 
+
 function selectPlan(plan: SavedPlan) {
   planSource.value = plan.planSource
   planQuery.value = plan.planQuery
   activePlanId.value = plan.id
 }
+
 
 async function handleSubmit(payload: { planSource: string; planQuery: string; planName: string }) {
   let formattedQuery = payload.planQuery
@@ -104,6 +113,7 @@ async function handleSubmit(payload: { planSource: string; planQuery: string; pl
   panelOpen.value = false
 }
 
+
 async function deletePlan(id: string) {
   try {
     history.value = await removePlan(id)
@@ -112,7 +122,9 @@ async function deletePlan(id: string) {
   }
 }
 
+
 let unwatchPlans: (() => void) | undefined
+
 
 onMounted(async () => {
   systemDark.addEventListener('change', applyTheme)
@@ -133,6 +145,7 @@ onMounted(async () => {
     }
   })
 })
+
 
 onUnmounted(() => {
   systemDark.removeEventListener('change', applyTheme)
